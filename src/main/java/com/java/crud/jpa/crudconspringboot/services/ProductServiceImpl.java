@@ -33,13 +33,36 @@ public class ProductServiceImpl implements ProductService{
     public Product save(Product product) {
         return productRepository.save(product);
     }
+
     @Transactional
     @Override
-    public Optional<Product> delete(Product product) {
-        Optional<Product> productOptional = productRepository.findById(product.getId());  //primero buscamos el producto con un optional pasandole el id
+    public Optional<Product> update(Long id, Product product) {
+        Optional<Product> productOptional = productRepository.findById(id);  //primero buscamos el producto con un optional pasandole el id
+        if(productOptional.isPresent()) {  //validamos que exista con in if pasandole el productoptional
+            Product productDb = productOptional.orElseThrow();   //instanciamos un objeto producto para obtener el producto de se busco y asiganrselo
+            //seteamos los datos que se vayan autualizad
+            productDb.setName(product.getName());
+            productDb.setDescription(product.getDescription());
+            productDb.setPrice(product.getPrice());
+            productDb.setSku(product.getSku());
+            return Optional.of(productRepository.save(productDb));   //retornamos el opcional pasandole el productdb actualizado
+        }
+        return  productOptional;
+    }
+
+    @Transactional
+    @Override
+    public Optional<Product> delete(Long id) {
+        Optional<Product> productOptional = productRepository.findById(id);  //primero buscamos el producto con un optional pasandole el id
         productOptional.ifPresent(productDb -> {  //validamos que exista
             productRepository.delete(productDb);  //una ves encontrado eliminamos e producto
         });
-        return productOptional; //devulvemos el product db para confirma que se elimino
+        return productOptional; //devolvemos los datos del producto que se elimino
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsBySku(String sku) {
+        return productRepository.existsBySku(sku);
     }
 }
