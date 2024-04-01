@@ -50,8 +50,7 @@ public class ProductController {
     }
 
 
-
-    //el bindingresult se ocupara para personalizar los mensaje de error para la validacionde campos debe ir siempre despues del objeto a validar
+    //el blindingresult se ocupara para personalizar los mensaje de error para la validacionde campos debe ir siempre despues del objeto a validar
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Product product,BindingResult result, @PathVariable Long id){  //primero pasamos por pathVariabel el id que se actualizara y despues con requesBody(json) pasamos el cuerpo del obejto producto que se modificaran
         //una forma de calidar con una clase personalizada
