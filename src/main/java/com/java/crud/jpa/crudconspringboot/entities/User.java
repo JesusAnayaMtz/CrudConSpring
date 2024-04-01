@@ -2,6 +2,7 @@ package com.java.crud.jpa.crudconspringboot.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.java.crud.jpa.crudconspringboot.validation.ExistsByUsername;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -18,16 +19,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_name", unique = true)
+
+
+    @ExistsByUsername //ocupamos esta anotacion personalizada para validar si existe el usuario.
     @NotBlank
     @Size(min = 5, max = 20)
+    @Column(name = "user_name", unique = true)
     private String username;
 
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)  //con esto le damos acceso solo cuando se escribe, pero cuando lee ese campo lo oculta y asi ya no muestra la info de esecampos en un get
     private String password;
 
-    @JsonIgnoreProperties({"users"})  //se ocupa para que no se ciclen al consultar por la relacion many to many cuando este en ambas clases, lo que hace es ignorar los roles en la clase
+    @JsonIgnoreProperties({"users", "handler", "hibernateLazyInitializer"})  //se ocupa para que no se ciclen al consultar por la relacion many to many cuando este en ambas clases, lo que hace es ignorar los roles en la clase o excluir la contraparte del many to many
     @ManyToMany
     @JoinTable(
             name = "user_roles",
@@ -37,7 +41,7 @@ public class User {
     )
     private List<Role> roles;
 
-    private Boolean enabled; //este es para habilita y deshabilitar al usuario por default da 1 que es habilitado
+    private boolean enabled; //este es para habilita y deshabilitar al usuario por default da 1 que es habilitado
 
     //se crea este metodo para que al crear el usuario este se habilite
     @PrePersist
@@ -94,11 +98,11 @@ public class User {
         this.admin = admin;
     }
 
-    public Boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

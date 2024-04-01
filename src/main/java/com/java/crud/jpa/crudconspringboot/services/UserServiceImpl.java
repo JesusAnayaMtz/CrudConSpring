@@ -49,4 +49,9 @@ public class UserServiceImpl implements UserService{
         user.setPassword(passwordEncoder.encode(user.getPassword()));  //pasamos con set el password al usuario pero ya codificado con password enconder
         return userRepository.save(user);  //salvamos el usuario
     }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
 }

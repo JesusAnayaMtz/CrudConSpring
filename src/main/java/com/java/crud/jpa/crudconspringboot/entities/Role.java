@@ -1,5 +1,6 @@
 package com.java.crud.jpa.crudconspringboot.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jdk.dynalink.linker.LinkerServices;
 
@@ -18,6 +19,7 @@ public class Role {
     private String name;
 
 
+    @JsonIgnoreProperties({"roles", "handler", "hibernateLazyInitializer"})  //se coloc
     @ManyToMany(mappedBy = "roles")
     private List<User> users;
 
