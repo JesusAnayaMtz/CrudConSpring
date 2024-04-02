@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+//esta anotacion es para el cors
+@CrossOrigin(originPatterns = "*")  //al colocarlo asi le permitimos a cualqioer dominio, ip. local para que pueda acceder para la comunicacion del front
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -25,11 +28,13 @@ public class ProductController {
     @Autowired
     private ProductValidation productValidation;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     public List<Product> list(){
         return productService.findAll();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")  //se anota con pathvariable por que recibiri un id
     public ResponseEntity<?> viewProduct(@PathVariable Long id){  //se coloca como responseentity ya que puede que nos regrese un ok o un 404 notfound
         Optional<Product> productOptional =  productService.findById(id);  //le pasamos con un optional el producto con el id.
@@ -39,6 +44,7 @@ public class ProductController {
         return ResponseEntity.notFound().build();  //en caso no que no exista retornamos un notfound
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody Product product, BindingResult result){  //con un responseEntity de producto y dentro del cuerpo con requestBody para mandar el json de producto
         //una forma de calidar con una clase personalizada
@@ -51,6 +57,7 @@ public class ProductController {
 
 
     //el blindingresult se ocupara para personalizar los mensaje de error para la validacionde campos debe ir siempre despues del objeto a validar
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@Valid @RequestBody Product product,BindingResult result, @PathVariable Long id){  //primero pasamos por pathVariabel el id que se actualizara y despues con requesBody(json) pasamos el cuerpo del obejto producto que se modificaran
         //una forma de calidar con una clase personalizada
@@ -62,9 +69,10 @@ public class ProductController {
         if(productOptional.isPresent()){   //validamos que exista con un if y pasadole el optional
             return ResponseEntity.status(HttpStatus.CREATED).body(productOptional.orElseThrow());   //ya que se valido que exista se pasa el optional para devolver la respuesta la actulizacion en json
         }
-        return ResponseEntity.notFound().build();  // si no lo encuentra evuelve un 404 not found
+        return ResponseEntity.notFound().build();  // si no lo encuentra devuelve un 404 not found
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){  //se coloca como responseentity ya que puede que nos regrese un ok o un 404 notfound
         Optional<Product> productOptional =  productService.delete(id);  //le pasamos con un optional el producto nuevo al que se le asigno el id

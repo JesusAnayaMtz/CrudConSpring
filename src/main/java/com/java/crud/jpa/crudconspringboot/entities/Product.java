@@ -18,7 +18,7 @@ public class Product {
     @Size(min = 4, max = 25) // se utiliza para string para el min y max de caracteres
     private String name;
     @NotNull(message = "{NotNull.product.price}")   // solo se ocupa para enteros o fechas u objetos
-    @Min(value = 20, message = "{Min.product.price}")  //se ocupa para que tenga un valor minimo solo en enteros o este tipo de datos numericos
+    @Min(value = 2, message = "{Min.product.price}")  //se ocupa para que tenga un valor minimo solo en enteros o este tipo de datos numericos
     private Integer price;
     @IsRequired  //aqui ocupamos nuestra clase personalizada
     private String description;

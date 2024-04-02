@@ -79,7 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = user.getUsername();   //y aqui obtenemos el user name
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();  //obtenemos los roles esto devuelve un tipo colletion de grantedautorities
 
-        Claims claims = Jwts.claims().add("authorities", roles)
+        Claims claims = Jwts.claims().add("authorities", new ObjectMapper().writeValueAsString(roles))  //pasamos los roles como un json con objectmapper
                 .add("username", username)  // le agragemas tambie  el username
                 .build();  //creamos un claims y le pasamos los roles
 

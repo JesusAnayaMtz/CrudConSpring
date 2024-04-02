@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService{
         Optional<Product> productOptional = productRepository.findById(id);  //primero buscamos el producto con un optional pasandole el id
         if(productOptional.isPresent()) {  //validamos que exista con in if pasandole el productoptional
             Product productDb = productOptional.orElseThrow();   //instanciamos un objeto producto para obtener el producto de se busco y asiganrselo
-            //seteamos los datos que se vayan autualizad
+            //seteamos los datos que se vayan autualizar
             productDb.setName(product.getName());
             productDb.setDescription(product.getDescription());
             productDb.setPrice(product.getPrice());

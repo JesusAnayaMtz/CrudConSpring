@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//@CrossOrigin(origins = "http://localhost:4200") /// para configurar que el front pueda acceder al back se pueden poner un url, una ip, o varias rutas
+@CrossOrigin(originPatterns = "*") //al colocarlo asi le permitimos a cualqioer dominio, ip. local para que pueda acceder para la comunicacion del front
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -26,6 +29,7 @@ public class UserController {
     }
 
     //create se ocupara cuando se cree un usuario y pueda ser admin
+    @PreAuthorize("hasRole('ADMIN')")  //OTRA FORMA DE RESTIRNGIR LOS ENDPOINTS CON ANOTACIONES
     @PostMapping
     public ResponseEntity<?> create(@Valid @RequestBody User user,BindingResult result){  //creamos un metodo del tipo post del tipo respnse entity d user, y dentro del cuerpo le pasamos el user en json
         //una forma de calidar con una clase personalizada
