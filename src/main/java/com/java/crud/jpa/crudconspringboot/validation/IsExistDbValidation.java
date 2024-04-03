@@ -1,5 +1,6 @@
 package com.java.crud.jpa.crudconspringboot.validation;
 
+import com.java.crud.jpa.crudconspringboot.repositories.ProductRepository;
 import com.java.crud.jpa.crudconspringboot.services.ProductService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
